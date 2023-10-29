@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  reverse-proxy:
+    container_name: reverse-proxy
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./reverse-proxy
+    ports:
+      - 80:80
+      - 443:443
+
+  devices-api:
+    container_name: devices-api
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./devices-api
+    depends_on:
+      - reverse-proxy
+
+  backend-api:
+    container_name: backend-api
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./backend-api
+    depends_on:
+      - reverse-proxy
+
+  frontend:
+    container_name: frontend
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    depends_on:
+      - reverse-proxy
